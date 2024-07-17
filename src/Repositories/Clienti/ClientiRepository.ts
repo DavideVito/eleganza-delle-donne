@@ -1,4 +1,4 @@
-import { DocumentReference, FirestoreDataConverter, addDoc, collection, doc, getDoc, getDocs, getFirestore, limit, query } from "firebase/firestore"
+import { FirestoreDataConverter, addDoc, collection, doc, getDoc, getDocs, getFirestore, limit, query } from "firebase/firestore"
 import { Cliente, CreaClienteModel } from "../../Models/Cliente/Cliente";
 import { app } from "../../Firebase/Firebase";
 
@@ -6,7 +6,7 @@ const firestore = getFirestore(app)
 
 
 
-const converter: FirestoreDataConverter<Cliente, Cliente> = {
+const converter: FirestoreDataConverter<Cliente> = {
     fromFirestore: (snapshot) => {
         const data = snapshot.data();
 
