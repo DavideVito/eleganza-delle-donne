@@ -1,92 +1,77 @@
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { Intervento } from "../../../Models/Cliente/Intervento"
 import InterventiRepository from "../../../Repositories/Interventi/InterventiRepository"
 import { Typography } from "@mui/material"
 import 'react-slideshow-image/dist/styles.css'
-import { Slide } from "react-slideshow-image"
+import { formatDate } from "../../../Utils/Functions"
+import { ImageUploader } from "./Components/ImageUploader"
+import { ImageViewer } from "./Components/ImageViewer"
+import { Cliente } from "../../../Models/Cliente/Cliente"
+import ClientiRepository from "../../../Repositories/Clienti/ClientiRepository"
 
 export const InfoIntervento = () => {
 
     const { idcliente, id } = useParams()
 
     const [intervento, setIntervento] = useState<Intervento | null | undefined>(undefined)
-
-    useEffect(() => { InterventiRepository.GetIntervento(idcliente!, id!).then(setIntervento) }, [])
-
-    if (typeof intervento === "undefined") return "Carico"
-
-    if (!intervento) return "Intervento non trovato"
-
-    return <>
-        <Typography variant="h4">Info</Typography>
-        <Typography>Data: {intervento.data.toLocaleString()}</Typography>
-        <Typography>Descrizione: {intervento.descrizione}</Typography>
-
-        <Typography variant="h4">Immagini</Typography>
-        <ViewerImmagini intervento={intervento} />
-
-        <Typography variant="h4">Carica immagini</Typography>
-        <ImageUploader intervento={intervento} />
-    </>
-
-}
-
-const ImageUploader = ({ intervento }: { intervento: Intervento }) => {
-
-    const inputRef = useRef<HTMLInputElement | null>(null)
-
-
-    const uploadFile = async () => {
-
-        const files = inputRef.current!.files
-
-        if (files == null) return;
-
-        const promises = [...files].map(x => InterventiRepository.AddFile(intervento.id, x))
-
-        await Promise.all(promises)
-    }
-
-    return <>
-
-        <input type="file" multiple ref={inputRef} />
-        <button onClick={uploadFile}>Upload</button>
-
-    </>
-
-}
-
-const ViewerImmagini = ({ intervento }: { intervento: Intervento }) => {
-
+    const [cliente, setCliente] = useState<Cliente | null | undefined>(undefined)
     const [urls, setUrls] = useState<string[] | undefined>();
 
-    useEffect(() => { InterventiRepository.GetFiles(intervento.id).then(setUrls) }, [intervento])
+    const getFiles = () => InterventiRepository.GetFiles(id!).then(setUrls);
 
-    if (typeof urls === "undefined") return "Carico";
+    useEffect(() => {
+        InterventiRepository.GetIntervento(idcliente!, id!).then(setIntervento)
+        ClientiRepository.GetCliente(idcliente!).then(setCliente)
+        getFiles()
+    }, [])
 
-    return <Slideshow immagini={urls} />
-}
+    const onFileUploaded = () => {
+        debugger
 
-const divStyle = {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundSize: 'cover',
-    height: '400px'
-}
+        getFiles()
+    }
 
-const Slideshow = ({ immagini }: { immagini: string[] }) => {
-    return (
-        <div className="slide-container">
-            <Slide>
-                {immagini.map((slideImage, index) => (
-                    <div key={index}>
-                        <div style={{ ...divStyle, 'backgroundImage': `url(${slideImage})` }}>
-                        </div>
-                    </div>
-                ))}
-            </Slide>
+
+    if (typeof intervento === "undefined" || typeof cliente === "undefined") return "Carico"
+
+    if (!intervento) return "Intervento non trovato"
+    if (!cliente) return "Cliente non trovato"
+
+
+
+    return <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+
+        <div>
+            <Typography variant="h3">Info intervento</Typography>
         </div>
-    )
+
+        <div>
+            <Typography >Cliente: {cliente.nomePersona}</Typography>
+        </div>
+
+        <div>
+            <Typography>Data: {formatDate(intervento.data)}</Typography>
+        </div>
+
+        <div>
+            <Typography>Descrizione:</Typography>
+            <Typography variant="body2">
+                {intervento.descrizione}
+            </Typography>
+        </div>
+
+        <div>
+            <Typography variant="h4">Immagini</Typography>
+            <ImageViewer urls={urls} />
+        </div>
+
+        <div>
+            <Typography variant="h4">Carica immagini</Typography>
+            <ImageUploader intervento={intervento} onFileUploaded={onFileUploaded} />
+        </div>
+    </div>
+
 }
+
+

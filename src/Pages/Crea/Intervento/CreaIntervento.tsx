@@ -3,7 +3,9 @@ import * as yup from 'yup';
 import { Button, TextField } from '@mui/material';
 import InterventiRepository from '../../../Repositories/Interventi/InterventiRepository';
 import { Cliente } from '../../../Models/Cliente/Cliente';
-import { useRef } from 'react';
+import { useEffect, useState } from 'react';
+import { useParams, redirect } from 'react-router-dom';
+import ClientiRepository from '../../../Repositories/Clienti/ClientiRepository';
 
 
 interface CreaIntervento {
@@ -21,7 +23,17 @@ const validationSchema = yup.object<CreaIntervento>({
         .required('descrizione is required'),
 });
 
-export const CreaIntervento = ({ cliente }: { cliente: Cliente }) => {
+export const CreaIntervento = () => {
+
+    const { id } = useParams();
+    const [cliente, setCliente] = useState<Cliente | null | undefined>(undefined)
+
+    useEffect(() => {
+
+        if (!id) redirect("/");
+
+        ClientiRepository.GetCliente(id!).then(setCliente)
+    }, [])
 
 
     const formik = useFormik<CreaIntervento>({
@@ -33,49 +45,49 @@ export const CreaIntervento = ({ cliente }: { cliente: Cliente }) => {
         validationSchema: validationSchema,
 
         onSubmit: async (values) => {
-            const idCreato = await
-
-                InterventiRepository.CreaIntervento({
-                    cliente: cliente,
-                    data: values.data,
-                    descrizione: values.descrizione
-                })
+            await InterventiRepository.CreaIntervento({
+                cliente: cliente,
+                data: new Date(values.data),
+                descrizione: values.descrizione
+            })
         },
     });
 
+    if (!cliente) return <p>Cliente non trovato</p>;
+
+
     return (
-        <div>
-            <form onSubmit={formik.handleSubmit}>
-                <TextField
-                    fullWidth
-                    id="data"
-                    name="data"
-                    label="Nome Cliente"
-                    type='date'
-                    value={formik.values.data}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    error={formik.touched.data && Boolean(formik.errors.data)}
-                />
+        <form onSubmit={formik.handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+            <TextField
+                fullWidth
+                id="data"
+                name="data"
+                label="Data intervento"
+                type='date'
+                value={formik.values.data}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={formik.touched.data && Boolean(formik.errors.data)}
+            />
 
-                <TextField
-                    fullWidth
-                    id="descrizione"
-                    name="descrizione"
-                    label="descrizione"
-                    type="descrizione"
-                    value={formik.values.descrizione}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    error={formik.touched.descrizione && Boolean(formik.errors.descrizione)}
-                    helperText={formik.touched.descrizione && formik.errors.descrizione}
-                />
+            <TextField
+                multiline
+                fullWidth
+                id="descrizione"
+                name="descrizione"
+                label="descrizione"
+                type="descrizione"
+                value={formik.values.descrizione}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={formik.touched.descrizione && Boolean(formik.errors.descrizione)}
+                helperText={formik.touched.descrizione && formik.errors.descrizione}
+            />
 
-                <Button color="primary" variant="contained" fullWidth type="submit">
-                    Submit
-                </Button>
-            </form>
-        </div>
+            <Button color="primary" variant="contained" fullWidth type="submit">
+                Salva
+            </Button>
+        </form>
     );
 };
 

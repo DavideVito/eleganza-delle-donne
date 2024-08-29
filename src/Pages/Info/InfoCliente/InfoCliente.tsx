@@ -3,9 +3,9 @@ import { useParams } from "react-router-dom"
 import { Cliente } from "../../../Models/Cliente/Cliente";
 import ClientiRepository from "../../../Repositories/Clienti/ClientiRepository";
 import { Button, Card, CardContent, Link, Typography } from "@mui/material";
-import CreaIntervento from "../../Crea/Intervento";
 import InterventiRepository from "../../../Repositories/Interventi/InterventiRepository";
 import { Intervento } from "../../../Models/Cliente/Intervento";
+import AddIcon from '@mui/icons-material/Add';
 
 export const InfoCliente = () => {
     const { id } = useParams();
@@ -58,7 +58,6 @@ const ElemIntervento = ({ cliente, intervento }: { cliente: Cliente, intervento:
 
 const ViewInterventi = ({ cliente }: { cliente: Cliente }) => {
 
-    const [showCrea, setShowCrea] = useState<boolean>(false);
     const [interventi, setInterventi] = useState<Intervento[] | undefined>()
 
     useEffect(() => { InterventiRepository.GetInterventi(cliente).then(setInterventi) }, [])
@@ -67,22 +66,17 @@ const ViewInterventi = ({ cliente }: { cliente: Cliente }) => {
     if (!interventi) return "Carico"
 
     return <>
-
-        <Typography variant="h5">Interventi </Typography>
-
-        <div>
-            {interventi.map(x => <ElemIntervento cliente={cliente} intervento={x} />)}
+        <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "2rem" }}>
+            <Typography variant="h2">Interventi</Typography>
+            <Button variant="contained" color="success" onClick={() => window.location.href = `/crea-intervento/${cliente.id}`}>
+                <AddIcon />
+            </Button>
         </div>
 
 
-        {
-            showCrea ? <>
-                <Typography variant="h5">Crea Intervento</Typography>
-                <CreaIntervento cliente={cliente} />
-            </> : <Button onClick={() => setShowCrea(true)}>Crea</Button>
-
-
-        }
+        <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+            {interventi.map(x => <ElemIntervento cliente={cliente} intervento={x} />)}
+        </div>
 
     </>
 }

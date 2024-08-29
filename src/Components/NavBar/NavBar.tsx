@@ -7,7 +7,7 @@ const nome = "Eleganza delle donne"
 
 
 
-const Immagine = () => <img src={logo} width={50} height={50} />
+const Immagine = () => <img src={logo} width={40} height={40} style={{ borderRadius: "50%" }} />
 
 
 export const NavBar = () => {
@@ -17,9 +17,10 @@ export const NavBar = () => {
         <AppBar position="static">
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
-                    <Immagine />
+                    <a href="/">
+                        <Immagine />
+                    </a>
                     <Typography
-                        variant="h6"
                         noWrap
                         component="a"
                         href="#app-bar-with-responsive-menu"
@@ -29,6 +30,7 @@ export const NavBar = () => {
                             fontWeight: 700,
                             color: 'inherit',
                             textDecoration: 'none',
+                            marginLeft: "1rem"
                         }}
                     >
                         {nome}

@@ -31,7 +31,6 @@ export const CreaCliente = () => {
         validationSchema: validationSchema,
 
         onSubmit: async (values) => {
-            debugger
             const idCreato = await CreaClienteRepository.CreaCliente({
                 nomePersona: values.nomePersona,
                 numeroTelefono: values.numeroTelefono
@@ -44,37 +43,37 @@ export const CreaCliente = () => {
     });
 
     return (
-        <div>
-            <form onSubmit={formik.handleSubmit}>
-                <TextField
-                    fullWidth
-                    id="nomePersona"
-                    name="nomePersona"
-                    label="Nome Cliente"
-                    value={formik.values.nomePersona}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    error={formik.touched.nomePersona && Boolean(formik.errors.nomePersona)}
-                    helperText={formik.touched.nomePersona && formik.errors.nomePersona}
-                />
+        <form
+            onSubmit={formik.handleSubmit}
+            style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+            <TextField
+                fullWidth
+                id="nomePersona"
+                name="nomePersona"
+                label="Nome Cliente"
+                value={formik.values.nomePersona}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={formik.touched.nomePersona && Boolean(formik.errors.nomePersona)}
+                helperText={formik.touched.nomePersona && formik.errors.nomePersona}
+            />
 
-                <TextField
-                    fullWidth
-                    id="numeroTelefono"
-                    name="numeroTelefono"
-                    label="numeroTelefono"
-                    type="numeroTelefono"
-                    value={formik.values.numeroTelefono}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    error={formik.touched.numeroTelefono && Boolean(formik.errors.numeroTelefono)}
-                    helperText={formik.touched.numeroTelefono && formik.errors.numeroTelefono}
-                />
-                <Button color="primary" variant="contained" fullWidth type="submit">
-                    Submit
-                </Button>
-            </form>
-        </div>
+            <TextField
+                fullWidth
+                id="numeroTelefono"
+                name="numeroTelefono"
+                label="numeroTelefono"
+                type="numeroTelefono"
+                value={formik.values.numeroTelefono}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={formik.touched.numeroTelefono && Boolean(formik.errors.numeroTelefono)}
+                helperText={formik.touched.numeroTelefono && formik.errors.numeroTelefono}
+            />
+            <Button color="primary" variant="contained" fullWidth type="submit">
+                Submit
+            </Button>
+        </form>
     );
 };
 

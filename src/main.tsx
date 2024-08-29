@@ -6,6 +6,7 @@ import { CreaCliente } from './Pages/Crea/Cliente/CreaCliente.tsx'
 import { InfoCliente } from './Pages/Info/InfoCliente/InfoCliente.tsx'
 import { NavBar } from './Components/NavBar/NavBar.tsx'
 import { InfoIntervento } from './Pages/Info/InfoIntervento/InfoIntervento.tsx'
+import { CreaIntervento } from './Pages/Crea/Intervento/CreaIntervento.tsx'
 
 const routes = createBrowserRouter([{
   path: "/",
@@ -14,6 +15,11 @@ const routes = createBrowserRouter([{
 {
   path: "/crea-cliente",
   element: <CreaCliente />
+},
+
+{
+  path: "/crea-intervento/:id",
+  element: <CreaIntervento />
 },
 
 {

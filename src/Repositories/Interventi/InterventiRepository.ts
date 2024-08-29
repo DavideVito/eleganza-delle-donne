@@ -16,7 +16,7 @@ const converter: FirestoreDataConverter<any, Intervento> = {
 
         return {
             id: snapshot.id,
-            data: data.data,
+            data: data.data.toDate(),
             descrizione: data.descrizione
         }
     },
@@ -64,6 +64,8 @@ const GetIntervento = async (idCliente: string, idIntervento: string): Promise<I
 }
 
 const AddFile = async (idIntervento: string, file: File): Promise<UploadResult> => {
+    debugger
+
     const fileRef = ref(storage, `${idIntervento}/${file.name}`)
     const buffer = await file.arrayBuffer()
 
