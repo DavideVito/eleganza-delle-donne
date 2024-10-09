@@ -1,63 +1,62 @@
+import { Scheduler } from "@aldabil/react-scheduler"
+import AppuntamentiRepository from "../../Repositories/Appuntamenti/AppuntamentiRepository"
 import { useEffect, useState } from "react"
-import ClientiRepository from "../../Repositories/Clienti/ClientiRepository";
-import { Cliente } from "../../Models/Cliente/Cliente";
-import { Button, Card, CardActions, CardContent, Link, Typography } from "@mui/material";
-import AddIcon from '@mui/icons-material/Add';
+import { Appuntamento, CreaAppuntamentoModel } from "../../Models/Appuntamento/Appuntamento"
+import { EventActions, ProcessedEvent } from "@aldabil/react-scheduler/types"
 
-const LinkCreazione = () => <Button variant="contained" color="success" onClick={() => window.location.href = "/crea-cliente"}>
-    <AddIcon />
-</Button>
 
-const ElemCliente = ({ cliente }: { cliente: Cliente }) => {
-    return <Card sx={{ minWidth: 275 }}>
-        <CardContent>
-            <Typography >
-                {cliente.nomePersona}
-            </Typography>
-
-            <Typography variant="subtitle1">
-                {cliente.numeroTelefono}
-            </Typography>
-        </CardContent>
-
-        <CardActions>
-            <Link href={`/info-cliente/${cliente.id}`} style={{ textDecoration: "none" }} >
-                Visualizza
-            </Link>
-        </CardActions>
-    </Card>
-
+const convertEventi = (appuntamento: Appuntamento): ProcessedEvent => {
+    return {
+        event_id: appuntamento.id,
+        title: appuntamento.titolo,
+        subtitle: appuntamento.sottotitolo,
+        start: appuntamento.inizio,
+        end: appuntamento.fine
+    }
 }
 
 
 export const Homepage = () => {
 
-    const [clienti, setClienti] = useState<Cliente[] | undefined>();
 
-    useEffect(() => { ClientiRepository.GetClienti().then(setClienti) }, [])
+    const onConfirm = async (event: ProcessedEvent, action: EventActions) => {
+
+        const dto: CreaAppuntamentoModel = {
+            id: event.event_id?.toString(),
+            fine: event.end,
+            inizio: event.start,
+            //@ts-ignore
+            sottotitolo: event.subtitle,
+
+            //@ts-ignore
+            titolo: event.title
+        }
+
+        await AppuntamentiRepository.CreaAppuntamento(dto)
+        return event
+    }
+
+    const onDelete = async (event: string) => {
+        await AppuntamentiRepository.DeleteAppuntamento(event)
+        getAppuntamenti()
+    }
+
+    const getAppuntamenti = () => { AppuntamentiRepository.GetAppuntamenti().then(setAppuntamenti) }
+
+    const [appuntamenti, setAppuntamenti] = useState<Appuntamento[] | undefined>(undefined);
+
+    useEffect(getAppuntamenti, [])
+
+    if (!appuntamenti) return
+
+    return <Scheduler
+        view="month"
 
 
-    if (!clienti) return "Carico"
+        onConfirm={onConfirm}
+        onDelete={onDelete}
 
-    if (clienti.length === 0) return <>
-        <Typography>
-            Nessun cliente trovato
-            <br />
-        </Typography>
-    </>
 
-    return <>
-        <div style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "2rem" }}>
-            <Typography variant="h2">Clienti</Typography>
-            <LinkCreazione />
-        </div>
-        <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
-            {
-                clienti.map(cliente => <ElemCliente cliente={cliente} />)
-
-            }
-        </div>
-    </>
-
+        events={appuntamenti!.map(convertEventi)}
+    />
 }
-
