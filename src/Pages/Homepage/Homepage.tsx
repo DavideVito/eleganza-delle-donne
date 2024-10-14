@@ -3,6 +3,7 @@ import AppuntamentiRepository from "../../Repositories/Appuntamenti/Appuntamenti
 import { useEffect, useState } from "react"
 import { Appuntamento, CreaAppuntamentoModel } from "../../Models/Appuntamento/Appuntamento"
 import { EventActions, ProcessedEvent } from "@aldabil/react-scheduler/types"
+import { it } from 'date-fns/locale';
 
 
 const convertEventi = (appuntamento: Appuntamento): ProcessedEvent => {
@@ -50,12 +51,63 @@ export const Homepage = () => {
     if (!appuntamenti) return
 
     return <Scheduler
-        view="month"
 
+        locale={it}
+
+        translations={
+            {
+                navigation: {
+                    month: "Mese",
+                    week: "Settimana",
+                    day: "Giorno",
+                    today: "Oggi",
+                    agenda: "Agenda"
+                },
+                form: {
+                    addTitle: "Aggiunti appuntamento",
+                    editTitle: "Modifica appuntamento",
+                    confirm: "Conferma",
+                    delete: "Elimina",
+                    cancel: "Annulla"
+                },
+                event: {
+                    title: "Titolo",
+                    subtitle: "Descrizione",
+                    start: "Inizio",
+                    end: "Fine",
+                    allDay: "Tutto il giorno"
+                },
+                validation: {
+                    required: "Richiesto",
+                    invalidEmail: "Email non valida",
+                    onlyNumbers: "Solo numeri accettati",
+                    min: "Inserisci almeno {{min}} lettere",
+                    max: "Inserisci al massimo {{max}} lettere"
+                },
+                moreEvents: "Di più...",
+                noDataToDisplay: "Nessun elemento da mostrare",
+                loading: "Carico..."
+            }
+        }
+
+        view={"week"}
 
         onConfirm={onConfirm}
         onDelete={onDelete}
 
+        loading={typeof appuntamenti === "undefined"}
+
+        week={{
+            weekDays: [1, 2, 3, 4, 5, 6],
+            weekStartOn: 0,
+            startHour: 8,
+            endHour: 19,
+            step: 60,
+            navigation: true,
+            disableGoToDay: false
+        }}
+
+        height={400}
 
         events={appuntamenti!.map(convertEventi)}
     />
