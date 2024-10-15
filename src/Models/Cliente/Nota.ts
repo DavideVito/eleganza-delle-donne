@@ -1,13 +1,13 @@
 import { Cliente } from "./Cliente"
 
-export interface Intervento {
+export interface Nota {
 
     id: string,
     data: Date,
     descrizione: string
 }
 
-export interface CreaInterventoModel {
+export interface CreaNotaModel {
     cliente: Cliente
     data: Date,
     descrizione: string

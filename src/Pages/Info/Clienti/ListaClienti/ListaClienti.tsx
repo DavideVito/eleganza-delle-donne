@@ -1,13 +1,9 @@
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import ClientiRepository from "../../../../Repositories/Clienti/ClientiRepository"
 import { Cliente } from "../../../../Models/Cliente/Cliente"
-import { Button, Card, CardActions, CardContent, Link, Typography } from "@mui/material"
+import { Button, Card, CardActions, CardContent, Grid, Typography } from "@mui/material"
+import { Link } from "react-router-dom"
 
-const style: React.CSSProperties = {
-    display: "flex",
-    flexDirection: "column",
-    gap: "1rem"
-}
 
 export const ListaClienti = () => {
 
@@ -18,33 +14,55 @@ export const ListaClienti = () => {
     }, [])
 
 
-    return <div>
-        <Link href="/crea/crea-cliente">Crea Cliente</Link>
+    return <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
 
-        <div style={style}>
-            {
-                !clienti ? "Carico..." : clienti.map(x => <Card key={x.id}>
+        <Grid item xs={12}>
+            <Card >
 
 
-                    <CardContent>
-                        <Typography variant="h5" component="div">
-                            {x.nomePersona}
-                        </Typography>
-                    </CardContent>
+                <CardContent>
+                    <Typography variant="h5" component="div">
+                        Aggiungi un cliente
+                    </Typography>
+                </CardContent>
 
-                    <CardActions>
-                        <Button onClick={() => window.location.href = `/cliente/${x.id}`}>
-                            Più info
-                        </Button>
+                <CardActions>
+                    <Button component={Link} to="/crea/crea-cliente" variant="contained" color="success">
+                        Crea cliente
+                    </Button>
 
-                    </CardActions>
-                </Card>
+                </CardActions>
+            </Card>
+        </Grid>
 
-                )
+        {!clienti ? "Carico..." : clienti.map(x => <Grid item xs={6} key={x.id}>
 
 
-            }
-        </div>
-    </div >
+            <Card>
+
+
+                <CardContent>
+                    <Typography variant="h5" component="div">
+                        {x.nomePersona}
+                    </Typography>
+
+                    <Typography>
+                        {x.numeroTelefono}
+                    </Typography>
+                </CardContent>
+
+                <CardActions>
+                    <Button component={Link} to={`/cliente/${x.id}`} variant="contained" color="primary">
+                        Più info
+                    </Button>
+
+                </CardActions>
+            </Card>
+        </Grid>
+
+        )}
+
+
+    </Grid>
 
 }

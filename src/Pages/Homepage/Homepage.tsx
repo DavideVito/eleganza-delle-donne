@@ -22,6 +22,8 @@ export const Homepage = () => {
 
     const onConfirm = async (event: ProcessedEvent, action: EventActions) => {
 
+        console.log(action)
+
         const dto: CreaAppuntamentoModel = {
             id: event.event_id?.toString(),
             fine: event.end,
