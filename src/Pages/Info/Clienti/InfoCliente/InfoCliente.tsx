@@ -111,6 +111,8 @@ export const InfoCliente = () => {
         <Divider />
         <CreaNote cliente={cliente} onAfterSubmit={() => getNote(cliente)} />
 
+        <div style={{ marginBottom: "5rem" }}></div>
+
     </Container>
 
 
