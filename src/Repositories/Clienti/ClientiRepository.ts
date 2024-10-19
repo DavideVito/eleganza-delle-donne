@@ -1,4 +1,4 @@
-import { FirestoreDataConverter, addDoc, collection, doc, getDoc, getDocs, getFirestore, limit, query } from "firebase/firestore"
+import { FirestoreDataConverter, addDoc, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, limit, query } from "firebase/firestore"
 import { Cliente, CreaClienteModel } from "../../Models/Cliente/Cliente";
 import { app } from "../../Firebase/Firebase";
 
@@ -55,8 +55,15 @@ const GetClienti = async (): Promise<Cliente[]> => {
     return ris.docs.map(x => x.data());
 }
 
+const EliminaCliente = async (cliente: Cliente): Promise<void> => {
+    const documento = doc(collezioneClienti, cliente.id)
+
+    return await deleteDoc(documento)
+}
+
 export default {
     CreaCliente,
     GetCliente,
-    GetClienti
+    GetClienti,
+    EliminaCliente
 }

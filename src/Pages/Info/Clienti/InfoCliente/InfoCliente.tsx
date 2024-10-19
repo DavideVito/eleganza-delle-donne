@@ -1,4 +1,4 @@
-import { Container, Typography, Paper, List, ListItem, ListItemText, Divider, IconButton } from "@mui/material"
+import { Container, Typography, Paper, List, ListItem, ListItemText, Divider, IconButton, Button } from "@mui/material"
 import { useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { Cliente } from "../../../../Models/Cliente/Cliente"
@@ -35,6 +35,12 @@ export const InfoCliente = () => {
         getNote(cliente!)
     }
 
+    const deleteCliente = async () => {
+        await ClientiRepository.EliminaCliente(cliente!)
+        window.location.href = "/contatti"
+    }
+
+
 
     if (typeof cliente === "undefined") return "Carico..."
     if (!cliente) return "Cliente non trovato"
@@ -49,6 +55,15 @@ export const InfoCliente = () => {
             <Typography variant="body1">Nome: {cliente.nomePersona}</Typography>
             <Typography variant="body1">Telefono: {cliente.numeroTelefono}</Typography>
 
+        </Paper>
+
+        <Paper sx={{ padding: 2, mb: 4 }}>
+            <Typography variant="h6">Azioni</Typography>
+            <Divider />
+
+            <Button color="error" onClick={deleteCliente}>
+                Elimina cliente
+            </Button>
         </Paper>
 
         <Typography variant="h6" gutterBottom>

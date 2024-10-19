@@ -32,9 +32,9 @@ export const CreaCliente = () => {
     });
 
     const creaCliente = async (nome: string, telefono: string) => {
-        await ClientiRepository.CreaCliente({ nomePersona: nome, numeroTelefono: telefono })
+        const id = await ClientiRepository.CreaCliente({ nomePersona: nome, numeroTelefono: telefono })
 
-        alert("Ok")
+        window.location.href = `/cliente/${id}`
     }
 
 
@@ -44,7 +44,7 @@ export const CreaCliente = () => {
             fullWidth
             id="nome"
             name="nome"
-            label="nome"
+            label="Nome Cliente"
             value={formik.values.nome}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -56,8 +56,8 @@ export const CreaCliente = () => {
             fullWidth
             id="numeroTelefono"
             name="numeroTelefono"
-            label="numeroTelefono"
-            type="numeroTelefono"
+            label="Numero di telefono"
+            type="tel"
             value={formik.values.numeroTelefono}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
