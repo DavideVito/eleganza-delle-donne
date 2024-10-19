@@ -1,8 +1,9 @@
-import { FirestoreDataConverter, addDoc, collection, deleteDoc, doc, getDocs, getFirestore, query } from "firebase/firestore"
+import { FirestoreDataConverter, addDoc, collection, deleteDoc, doc, getDocs, getFirestore, query, setDoc } from "firebase/firestore"
 import { app } from "../../Firebase/Firebase";
 import { Appuntamento, CreaAppuntamentoModel } from "../../Models/Appuntamento/Appuntamento";
 
 const firestore = getFirestore(app)
+
 
 
 
@@ -13,6 +14,7 @@ const converter: FirestoreDataConverter<Appuntamento> = {
         return {
             id: snapshot.id,
             titolo: data.titolo,
+            cliente: data.cliente,
             sottotitolo: data.sottotitolo,
             inizio: data.inizio.toDate(),
             fine: data.fine.toDate()
@@ -23,6 +25,7 @@ const converter: FirestoreDataConverter<Appuntamento> = {
     toFirestore: (oggetto) => {
 
         return {
+            cliente: oggetto.cliente,
             titolo: oggetto.titolo,
             sottotitolo: oggetto.sottotitolo,
             inizio: oggetto.inizio,
@@ -40,6 +43,13 @@ const CreaAppuntamento = async (payload: CreaAppuntamentoModel): Promise<string>
     const ris = await addDoc(collezioneAppuntamenti, payload)
 
     return ris.id;
+}
+
+const AggiornaAppuntamento = async (id: string, payload: CreaAppuntamentoModel): Promise<void> => {
+    const documento = doc(collezioneAppuntamenti, id)
+
+    return setDoc(documento, payload)
+
 }
 
 // const AggiornaAppuntamento = async (payload: Appuntamento): Promise<void> => {
@@ -68,5 +78,6 @@ const DeleteAppuntamento = async (id: string): Promise<void> => {
 export default {
     CreaAppuntamento,
     GetAppuntamenti,
-    DeleteAppuntamento
+    DeleteAppuntamento,
+    AggiornaAppuntamento
 }

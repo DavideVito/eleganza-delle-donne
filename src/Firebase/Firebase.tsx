@@ -17,4 +17,6 @@ const firebaseConfig = {
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
 
-initializeFirestore(app, {});
+initializeFirestore(app, {
+    ignoreUndefinedProperties: true
+});

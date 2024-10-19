@@ -7,6 +7,8 @@ import BottomAppBar from './Components/BottomAppBar/BottomAppBar.tsx'
 import { CreaCliente } from './Pages/Crea/Cliente/CreaCliente.tsx'
 import { InfoCliente } from './Pages/Info/Clienti/InfoCliente/InfoCliente.tsx'
 import { createTheme, ThemeOptions, ThemeProvider } from '@mui/material'
+import { ClienteContextProvider } from './Contexts/Cliente/ClienteContext.tsx'
+import { AppuntamentiContextProvider } from './Contexts/Appuntamenti/AppuntamentiContext.tsx'
 const themeOptions: ThemeOptions = {
   palette: {
     mode: 'light',
@@ -49,11 +51,15 @@ const routes = createBrowserRouter([{
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <div style={{ padding: "1rem", marginBottom: "5rem" }}>
-        <RouterProvider router={routes} />
-      </div>
-      <BottomAppBar />
-    </ThemeProvider>
+    <ClienteContextProvider>
+      <AppuntamentiContextProvider>
+        <ThemeProvider theme={theme}>
+          <div style={{ padding: "1rem", marginBottom: "5rem" }}>
+            <RouterProvider router={routes} />
+          </div>
+          <BottomAppBar />
+        </ThemeProvider>
+      </AppuntamentiContextProvider>
+    </ClienteContextProvider>
   </React.StrictMode>,
 )

@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react"
-import ClientiRepository from "../../../../Repositories/Clienti/ClientiRepository"
+import { useContext, useEffect, useState } from "react"
 import { Cliente } from "../../../../Models/Cliente/Cliente"
 import { Button, Card, CardActions, CardContent, Divider, Grid, List, ListItem, ListItemText, Typography } from "@mui/material"
 import { Link, useNavigate } from "react-router-dom"
 import React from "react"
 import { CercaClienti } from "./CercaClienti"
+import { ClienteContext } from "../../../../Contexts/Cliente/ClienteContext"
 
 
 export const ListaClienti = () => {
@@ -14,13 +14,8 @@ export const ListaClienti = () => {
         navigate(`/cliente/${cliente.id}`);
     };
 
-    const [clienti, setClienti] = useState<Cliente[] | undefined>()
+    const clienti = useContext(ClienteContext)
     const [clientiFiltrati, setClientiFiltrati] = useState<Cliente[]>([])
-
-
-    useEffect(() => {
-        ClientiRepository.GetClienti().then(setClienti)
-    }, [])
 
     useEffect(() => {
         if (!clienti) {
@@ -58,7 +53,7 @@ export const ListaClienti = () => {
 
         <div style={{ height: "1rem" }}></div>
 
-        <Card sx={{ width: "100%", height: "70vh", overflowY: "auto" }}>
+        <Card sx={{ width: "100%", height: "50vh", overflowY: "auto" }}>
             <List>
                 {!clienti ? "Carico..." : clientiFiltrati.map((x, index) => <React.Fragment key={x.id}>
                     <ListItem
