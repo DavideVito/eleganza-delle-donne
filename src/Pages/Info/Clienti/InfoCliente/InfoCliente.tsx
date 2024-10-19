@@ -1,6 +1,6 @@
 import { Container, Typography, Paper, List, ListItem, ListItemText, Divider, IconButton, Button } from "@mui/material"
 import { useState, useEffect } from "react"
-import { useParams } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import { Cliente } from "../../../../Models/Cliente/Cliente"
 import { Nota } from "../../../../Models/Cliente/Nota"
 import ClientiRepository from "../../../../Repositories/Clienti/ClientiRepository"
@@ -36,6 +36,10 @@ export const InfoCliente = () => {
     }
 
     const deleteCliente = async () => {
+        const ris = confirm(`Sicuro di voler eliminare: ${cliente?.nomePersona}? Quest'operazione è irreversibile`)
+        if (!ris) return
+
+
         await ClientiRepository.EliminaCliente(cliente!)
         window.location.href = "/contatti"
     }
@@ -61,9 +65,18 @@ export const InfoCliente = () => {
             <Typography variant="h6">Azioni</Typography>
             <Divider />
 
-            <Button color="error" onClick={deleteCliente}>
-                Elimina cliente
-            </Button>
+            <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                <Button component={Link} to={`tel://${cliente.numeroTelefono}`}
+                    variant="outlined"
+                    color="primary">
+                    Chiama
+                </Button>
+
+
+                <Button color="error" variant="contained" onClick={deleteCliente}>
+                    Elimina cliente
+                </Button>
+            </div>
         </Paper>
 
         <Typography variant="h6" gutterBottom>
