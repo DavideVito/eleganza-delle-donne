@@ -56,7 +56,6 @@ export const CreaAppuntamento = ({ scheduler }: CustomEditorProps) => {
 
     const handleSubmit = async (valori: CreaAppuntamentoModel) => {
 
-        debugger
         if (isEditing) {
             const id = scheduler.state.event_id.value
             await AppuntamentiRepository.AggiornaAppuntamento(id!, valori)

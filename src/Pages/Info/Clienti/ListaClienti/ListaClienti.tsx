@@ -1,32 +1,9 @@
-import { useContext, useEffect, useState } from "react"
-import { Cliente } from "../../../../Models/Cliente/Cliente"
-import { Button, Card, CardActions, CardContent, Divider, Grid, List, ListItem, ListItemText, Typography } from "@mui/material"
-import { Link, useNavigate } from "react-router-dom"
-import React from "react"
-import { CercaClienti } from "./CercaClienti"
-import { ClienteContext } from "../../../../Contexts/Cliente/ClienteContext"
+import { Button, Card, CardActions, CardContent, Grid, Typography } from "@mui/material"
+import { Link } from "react-router-dom"
+import { ListaClienti as Lc } from "../../../../Components/ListaClienti/ListaClienti"
 
 
 export const ListaClienti = () => {
-    const navigate = useNavigate(); // useNavigate hook for programmatic navigation
-
-    const handleContactClick = (cliente: Cliente) => {
-        navigate(`/cliente/${cliente.id}`);
-    };
-
-    const clienti = useContext(ClienteContext)
-    const [clientiFiltrati, setClientiFiltrati] = useState<Cliente[]>([])
-
-    useEffect(() => {
-        if (!clienti) {
-            setClientiFiltrati([])
-            return
-        }
-        setClientiFiltrati(clienti!)
-    }, [clienti])
-
-
-
 
     return <>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
@@ -49,30 +26,8 @@ export const ListaClienti = () => {
             </Grid>
         </Grid>
         <div style={{ height: "1rem" }}></div>
-        <CercaClienti clienti={clienti} setClientiFiltrati={setClientiFiltrati} />
 
-        <div style={{ height: "1rem" }}></div>
-
-        <Card sx={{ width: "100%", height: "50vh", overflowY: "auto" }}>
-            <List>
-                {!clienti ? "Carico..." : clientiFiltrati.map((x, index) => <React.Fragment key={x.id}>
-                    <ListItem
-                        onClick={() => handleContactClick(x)} // Handle click event for redirection
-                        sx={{
-                            cursor: 'pointer', // Makes the ListItem look clickable
-                            '&:hover': { backgroundColor: '#f0f0f0' }, // Hover effect
-                        }}
-                    >
-                        <ListItemText
-                            primary={x.nomePersona}
-                        />
-
-                    </ListItem>
-                    {index < clienti.length - 1 && <Divider variant="middle" />}
-                </React.Fragment>
-                )}
-            </List>
-        </Card>
+        <Lc />
     </>
 
 
