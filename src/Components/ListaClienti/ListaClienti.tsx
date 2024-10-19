@@ -1,4 +1,4 @@
-import { Card, List, ListItem, ListItemText, Divider, Typography } from "@mui/material";
+import { Card, List, ListItem, ListItemText, Typography } from "@mui/material";
 import React, { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ClienteContext } from "../../Contexts/Cliente/ClienteContext";
@@ -41,7 +41,6 @@ export const ListaClienti = () => {
     }, [clienti])
 
     useEffect(() => {
-        debugger
         if (!clientiFiltrati) {
             setGroupedUser({})
             return

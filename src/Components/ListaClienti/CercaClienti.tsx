@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
-import { Cliente } from "../../../../Models/Cliente/Cliente"
 import { Grid, TextField } from "@mui/material";
+import { Cliente } from "../../Models/Cliente/Cliente";
 
 interface CercaClientiProps {
     clienti: Cliente[] | undefined,
