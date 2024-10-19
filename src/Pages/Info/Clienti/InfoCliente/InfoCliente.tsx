@@ -72,6 +72,13 @@ export const InfoCliente = () => {
                     Chiama
                 </Button>
 
+                <Button component={Link} to={`/crea/crea-cliente/${id}`}
+                    variant="outlined"
+                    color="primary">
+                    Modifica
+                </Button>
+
+
 
                 <Button color="error" variant="contained" onClick={deleteCliente}>
                     Elimina cliente
@@ -110,8 +117,6 @@ export const InfoCliente = () => {
 
         <Divider />
         <CreaNote cliente={cliente} onAfterSubmit={() => getNote(cliente)} />
-
-        <div style={{ marginBottom: "5rem" }}></div>
 
     </Container>
 

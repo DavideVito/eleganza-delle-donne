@@ -1,8 +1,10 @@
 import { Button, TextField } from "@mui/material"
 import ClientiRepository from "../../../Repositories/Clienti/ClientiRepository"
 import { useFormik } from 'formik';
-import React from "react";
+import React, { useEffect } from "react";
 import * as yup from 'yup';
+import { useParams } from "react-router-dom";
+import { CreaClienteModel } from "../../../Models/Cliente/Cliente";
 
 const style: React.CSSProperties = {
     display: "flex",
@@ -11,15 +13,29 @@ const style: React.CSSProperties = {
 }
 
 const validationSchema = yup.object({
-    nome: yup
-        .string()
-        .required('Nome è richiesto'),
-    numeroTelefono: yup
-        .string()
-        .required('Numero telefono è richiesto'),
+    nome: yup.string().required('Nome è richiesto'),
+    numeroTelefono: yup.string(),
 });
 
 export const CreaCliente = () => {
+
+    let { id } = useParams();
+
+    useEffect(() => {
+
+        if (!id) return
+
+        ClientiRepository.GetCliente(id).then(x => {
+
+            formik.setValues({
+                nome: x!.nomePersona,
+                numeroTelefono: x!.numeroTelefono
+            })
+
+        })
+
+
+    }, [])
 
 
     const formik = useFormik({
@@ -28,11 +44,20 @@ export const CreaCliente = () => {
             numeroTelefono: '',
         },
         validationSchema: validationSchema,
-        onSubmit: (values) => creaCliente(values.nome, values.numeroTelefono)
+        onSubmit: (values) => salvaCliente(values.nome, values.numeroTelefono)
     });
 
-    const creaCliente = async (nome: string, telefono: string) => {
-        const id = await ClientiRepository.CreaCliente({ nomePersona: nome, numeroTelefono: telefono })
+    const salvaCliente = async (nome: string, telefono: string) => {
+        const dto: CreaClienteModel = { nomePersona: nome, numeroTelefono: telefono }
+
+        if (id) {
+            await ClientiRepository.AggiornaCliente(id, dto)
+        }
+        else {
+            id = await ClientiRepository.CreaCliente(dto)
+
+        }
+
 
         window.location.href = `/cliente/${id}`
     }

@@ -36,7 +36,7 @@ const routes = createBrowserRouter([{
   element: <ListaClienti />
 },
 {
-  path: "/crea/crea-cliente",
+  path: "/crea/crea-cliente/:id?",
   element: <CreaCliente />
 }
   ,
@@ -50,7 +50,7 @@ const routes = createBrowserRouter([{
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
-      <div style={{ padding: "1rem" }}>
+      <div style={{ padding: "1rem", marginBottom: "5rem" }}>
         <RouterProvider router={routes} />
       </div>
       <BottomAppBar />

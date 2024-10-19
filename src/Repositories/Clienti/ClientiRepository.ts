@@ -1,4 +1,4 @@
-import { FirestoreDataConverter, addDoc, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, limit, query } from "firebase/firestore"
+import { FirestoreDataConverter, addDoc, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, orderBy, query, setDoc } from "firebase/firestore"
 import { Cliente, CreaClienteModel } from "../../Models/Cliente/Cliente";
 import { app } from "../../Firebase/Firebase";
 
@@ -37,6 +37,14 @@ const CreaCliente = async (payload: CreaClienteModel): Promise<string> => {
     return ris.id;
 }
 
+const AggiornaCliente = async (id: string, payload: CreaClienteModel): Promise<void> => {
+
+    const documento = await doc(collezioneClienti, id)
+
+    await setDoc(documento, payload)
+}
+
+
 const GetCliente = async (id: string): Promise<Cliente | null> => {
     const ref = doc(collezioneClienti, id).withConverter(converter)
 
@@ -48,7 +56,7 @@ const GetCliente = async (id: string): Promise<Cliente | null> => {
 }
 
 const GetClienti = async (): Promise<Cliente[]> => {
-    const q = query(collezioneClienti, limit(10));
+    const q = query(collezioneClienti, orderBy("nomePersona"));
 
     const ris = await getDocs(q);
 
@@ -65,5 +73,6 @@ export default {
     CreaCliente,
     GetCliente,
     GetClienti,
-    EliminaCliente
+    EliminaCliente,
+    AggiornaCliente
 }

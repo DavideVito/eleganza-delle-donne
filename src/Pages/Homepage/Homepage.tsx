@@ -16,11 +16,45 @@ const convertEventi = (appuntamento: Appuntamento): ProcessedEvent => {
     }
 }
 
+const traduzioni = {
+    navigation: {
+        month: "Mese",
+        week: "Settimana",
+        day: "Giorno",
+        today: "Oggi",
+        agenda: "Agenda"
+    },
+    form: {
+        addTitle: "Aggiunti appuntamento",
+        editTitle: "Modifica appuntamento",
+        confirm: "Conferma",
+        delete: "Elimina",
+        cancel: "Annulla"
+    },
+    event: {
+        title: "Titolo",
+        subtitle: "Descrizione",
+        start: "Inizio",
+        end: "Fine",
+        allDay: "Tutto il giorno"
+    },
+    validation: {
+        required: "Richiesto",
+        invalidEmail: "Email non valida",
+        onlyNumbers: "Solo numeri accettati",
+        min: "Inserisci almeno {{min}} lettere",
+        max: "Inserisci al massimo {{max}} lettere"
+    },
+    moreEvents: "Di più...",
+    noDataToDisplay: "Nessun elemento da mostrare",
+    loading: "Carico..."
+}
+
 
 export const Homepage = () => {
 
 
-    const onConfirm = async (event: ProcessedEvent, action: EventActions) => {
+    const onConfirm = async (event: ProcessedEvent, action: EventActions): Promise<ProcessedEvent> => {
 
         console.log(action)
 
@@ -35,8 +69,8 @@ export const Homepage = () => {
             titolo: event.title
         }
 
-        await AppuntamentiRepository.CreaAppuntamento(dto)
-        return event
+        const id = await AppuntamentiRepository.CreaAppuntamento(dto)
+        return { ...event, event_id: id }
     }
 
     const onDelete = async (event: string) => {
@@ -56,41 +90,7 @@ export const Homepage = () => {
 
         locale={it}
 
-        translations={
-            {
-                navigation: {
-                    month: "Mese",
-                    week: "Settimana",
-                    day: "Giorno",
-                    today: "Oggi",
-                    agenda: "Agenda"
-                },
-                form: {
-                    addTitle: "Aggiunti appuntamento",
-                    editTitle: "Modifica appuntamento",
-                    confirm: "Conferma",
-                    delete: "Elimina",
-                    cancel: "Annulla"
-                },
-                event: {
-                    title: "Titolo",
-                    subtitle: "Descrizione",
-                    start: "Inizio",
-                    end: "Fine",
-                    allDay: "Tutto il giorno"
-                },
-                validation: {
-                    required: "Richiesto",
-                    invalidEmail: "Email non valida",
-                    onlyNumbers: "Solo numeri accettati",
-                    min: "Inserisci almeno {{min}} lettere",
-                    max: "Inserisci al massimo {{max}} lettere"
-                },
-                moreEvents: "Di più...",
-                noDataToDisplay: "Nessun elemento da mostrare",
-                loading: "Carico..."
-            }
-        }
+        translations={traduzioni}
 
         view={"week"}
 
@@ -103,8 +103,8 @@ export const Homepage = () => {
             weekDays: [1, 2, 3, 4, 5, 6],
             weekStartOn: 0,
             startHour: 8,
-            endHour: 19,
-            step: 60,
+            endHour: 20,
+            step: 30,
             navigation: true,
             disableGoToDay: false
         }}
