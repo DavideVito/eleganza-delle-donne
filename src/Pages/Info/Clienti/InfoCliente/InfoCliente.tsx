@@ -7,6 +7,7 @@ import ClientiRepository from "../../../../Repositories/Clienti/ClientiRepositor
 import CreaNote from "../../../Crea/Note"
 import NoteRepository from "../../../../Repositories/Note/NoteRepository"
 import DeleteIcon from '@mui/icons-material/Delete';
+import { Loading } from "../../../../Components/Loading/Loading"
 
 
 export const InfoCliente = () => {
@@ -46,7 +47,7 @@ export const InfoCliente = () => {
 
 
 
-    if (typeof cliente === "undefined") return "Carico..."
+    if (typeof cliente === "undefined") return <Loading />
     if (!cliente) return "Cliente non trovato"
 
 
@@ -92,7 +93,7 @@ export const InfoCliente = () => {
         <List>
             {
 
-                !interventi ? "Carico..." :
+                !interventi ? <Loading /> :
                     interventi.map((intervento) => <div key={intervento.id}>
                         <ListItem style={{ justifyContent: "space-between" }}
 

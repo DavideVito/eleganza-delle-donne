@@ -11,6 +11,7 @@ import { CreaAppuntamentoModel } from "../../../Models/Appuntamento/Appuntamento
 import AppuntamentiRepository from "../../../Repositories/Appuntamenti/AppuntamentiRepository";
 import { AppuntamentiContext } from "../../../Contexts/Appuntamenti/AppuntamentiContext";
 import dayjs from "dayjs";
+import { Loading } from "../../../Components/Loading/Loading";
 
 
 interface CustomEditorProps {
@@ -80,7 +81,7 @@ export const CreaAppuntamento = ({ scheduler }: CustomEditorProps) => {
         formik.setFieldValue("date", dayjs(appuntameto.inizio))
     }, [])
 
-    if (!clienti) return "Carico..."
+    if (!clienti) return <Loading />
 
     return (
         <Box

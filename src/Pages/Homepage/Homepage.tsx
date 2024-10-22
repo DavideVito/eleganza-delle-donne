@@ -6,6 +6,7 @@ import { ProcessedEvent } from "@aldabil/react-scheduler/types"
 import { it } from 'date-fns/locale';
 import CreaAppuntamento from "../Crea/Appuntamento"
 import { AppuntamentiContext } from "../../Contexts/Appuntamenti/AppuntamentiContext"
+import { Loading } from "../../Components/Loading/Loading"
 
 
 const convertEventi = (appuntamento: Appuntamento): ProcessedEvent => {
@@ -76,6 +77,7 @@ export const Homepage = () => {
         onDelete={onDelete}
 
         loading={typeof appuntamenti === "undefined"}
+        loadingComponent={<Loading />}
 
         week={{
             weekDays: [1, 2, 3, 4, 5, 6],
@@ -88,6 +90,8 @@ export const Homepage = () => {
         }}
 
         height={400}
+
+
 
         customEditor={(scheduler) => <CreaAppuntamento scheduler={scheduler} />}
 

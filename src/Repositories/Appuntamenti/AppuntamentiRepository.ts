@@ -52,13 +52,6 @@ const AggiornaAppuntamento = async (id: string, payload: CreaAppuntamentoModel):
 
 }
 
-// const AggiornaAppuntamento = async (payload: Appuntamento): Promise<void> => {
-//     debugger
-//     const documento = doc(collezioneAppuntamenti, payload.id)
-//     return updateDoc(documento, payload)
-// }
-
-
 const GetAppuntamenti = async (): Promise<Appuntamento[]> => {
     const q = query(collezioneAppuntamenti);
 
