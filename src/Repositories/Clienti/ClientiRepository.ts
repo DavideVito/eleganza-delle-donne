@@ -1,4 +1,4 @@
-import { FirestoreDataConverter, addDoc, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, orderBy, query, setDoc, where } from "firebase/firestore"
+import { FirestoreDataConverter, addDoc, collection, deleteDoc, doc, getDoc, getDocs, getFirestore, orderBy, query, setDoc } from "firebase/firestore"
 import { Cliente, CreaClienteModel } from "../../Models/Cliente/Cliente";
 import { app } from "../../Firebase/Firebase";
 
