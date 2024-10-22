@@ -67,14 +67,21 @@ export const CreaAppuntamento = ({ scheduler }: CustomEditorProps) => {
 
     useEffect(() => {
 
-        if (!isEditing) return
+
+
+        if (!isEditing) {
+            formik.setFieldValue("date", dayjs(scheduler.state.start.value))
+            return
+        }
 
         const id = scheduler.state.event_id.value
 
         const appuntameto = appuntamenti?.find(x => x.id === id)!
-
-        formik.setFieldValue("nomeCliente", appuntameto.titolo)
-        formik.setFieldValue("client", appuntameto.cliente?.id ?? '')
+        if (appuntameto.cliente) {
+            formik.setFieldValue("client", appuntameto.cliente?.id ?? '')
+        } else {
+            formik.setFieldValue("nomeCliente", appuntameto.titolo)
+        }
 
         formik.setFieldValue("description", appuntameto.sottotitolo)
 
