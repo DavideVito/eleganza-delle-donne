@@ -13,6 +13,7 @@ import { AppuntamentiContext } from "../../../Contexts/Appuntamenti/Appuntamenti
 import dayjs from "dayjs";
 import { Loading } from "../../../Components/Loading/Loading";
 
+import "dayjs/locale/it"
 
 interface CustomEditorProps {
     scheduler: SchedulerHelpers;
@@ -151,8 +152,9 @@ export const CreaAppuntamento = ({ scheduler }: CustomEditorProps) => {
                     helperText={formik.touched.description && formik.errors.description}
                 />
 
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="it">
                     <DateTimePicker
+
                         sx={{ width: "100%" }}
                         label="Data"
                         value={formik.values.date}
