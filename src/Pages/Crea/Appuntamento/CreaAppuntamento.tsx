@@ -1,13 +1,12 @@
 import { SchedulerHelpers } from "@aldabil/react-scheduler/types";
-import { TextField, Button, FormControl, Box, InputLabel, MenuItem, Select, Typography } from "@mui/material";
+import { TextField, Button, FormControl, Box, InputLabel, MenuItem, Select, Typography, Divider } from "@mui/material";
 import { useFormik } from "formik";
 import { useContext, useEffect } from "react";
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 import { ClienteContext } from "../../../Contexts/Cliente/ClienteContext";
-import { TimePicker } from "@mui/x-date-pickers";
+import { DateTimePicker } from "@mui/x-date-pickers";
 import { CreaAppuntamentoModel } from "../../../Models/Appuntamento/Appuntamento";
 import AppuntamentiRepository from "../../../Repositories/Appuntamenti/AppuntamentiRepository";
 import { AppuntamentiContext } from "../../../Contexts/Appuntamenti/AppuntamentiContext";
@@ -27,24 +26,19 @@ export const CreaAppuntamento = ({ scheduler }: CustomEditorProps) => {
     // Initialize useFormik hook
     const formik = useFormik({
         initialValues: {
+            nomeCliente: '',
             client: '',
             description: '',
             date: null,
-            startTime: null,
-            endTime: null,
         },
         onSubmit: (values) => {
-
             //@ts-ignore
-            const data: Date = values.date.toDate()
+            const inizio: Date = values.date.toDate()
 
-            //@ts-ignore
-            const inizio = new Date(data.setHours(values.startTime.hour(), values.startTime.minute()))
-
-            //@ts-ignore
-            const fine = new Date(data.setHours(values.endTime.hour(), values.endTime.minute()))
+            const fine = dayjs(inizio).add(30, "minute").toDate()
 
             handleSubmit({
+                titolo: values.nomeCliente,
                 cliente: clienti?.find(x => x.id === values.client)!,
                 inizio: inizio,
                 fine: fine,
@@ -55,16 +49,13 @@ export const CreaAppuntamento = ({ scheduler }: CustomEditorProps) => {
     });
 
     const handleSubmit = async (valori: CreaAppuntamentoModel) => {
-
         if (isEditing) {
             const id = scheduler.state.event_id.value
             await AppuntamentiRepository.AggiornaAppuntamento(id!, valori)
 
         } else {
             await AppuntamentiRepository.CreaAppuntamento(valori)
-
         }
-
 
         aggiornaAppuntamenti()
 
@@ -80,21 +71,13 @@ export const CreaAppuntamento = ({ scheduler }: CustomEditorProps) => {
 
         const appuntameto = appuntamenti?.find(x => x.id === id)!
 
-        formik.setFieldValue("client", appuntameto.cliente.id)
+        formik.setFieldValue("nomeCliente", appuntameto.titolo)
+        formik.setFieldValue("client", appuntameto.cliente?.id ?? '')
 
         formik.setFieldValue("description", appuntameto.sottotitolo)
 
 
         formik.setFieldValue("date", dayjs(appuntameto.inizio))
-
-        formik.setFieldValue("startTime", dayjs(appuntameto.inizio))
-        formik.setFieldValue("endTime", dayjs(appuntameto.fine))
-
-
-        //   formik.setFieldValue("client", )
-
-
-
     }, [])
 
     if (!clienti) return "Carico..."
@@ -112,7 +95,7 @@ export const CreaAppuntamento = ({ scheduler }: CustomEditorProps) => {
         >
 
             <form onSubmit={formik.handleSubmit}>
-                {/* Client Selection Dropdown */}
+
                 <FormControl fullWidth margin="normal" error={formik.touched.client && Boolean(formik.errors.client)}>
                     <InputLabel id="client-select-label">Cliente</InputLabel>
                     <Select
@@ -135,9 +118,23 @@ export const CreaAppuntamento = ({ scheduler }: CustomEditorProps) => {
                             {formik.errors.client}
                         </Typography>
                     )}
+
+                    <TextField
+                        label="Nome cliente"
+                        fullWidth
+                        margin="normal"
+                        id="nomeCliente"
+                        name="nomeCliente"
+                        value={formik.values.nomeCliente}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        error={formik.touched.nomeCliente && Boolean(formik.errors.nomeCliente)}
+                        helperText={formik.touched.nomeCliente && formik.errors.nomeCliente}
+                    />
                 </FormControl>
 
-                {/* Description Input */}
+
+
                 <TextField
                     label="Descrizione"
                     fullWidth
@@ -154,29 +151,15 @@ export const CreaAppuntamento = ({ scheduler }: CustomEditorProps) => {
                 />
 
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DatePicker
+                    <DateTimePicker
                         sx={{ width: "100%" }}
-                        label="Date"
+                        label="Data"
                         value={formik.values.date}
                         onChange={(date) => formik.setFieldValue('date', date)}
                     />
 
-                    <div style={{ display: "flex", flexDirection: "row", gap: "1rem", justifyContent: "space-between", marginTop: "0.5rem" }}>
-                        <TimePicker
-                            label="Start Time"
-                            value={formik.values.startTime}
-                            onChange={(time) => formik.setFieldValue('startTime', time)}
-                        />
-
-                        <TimePicker
-                            label="End Time"
-                            value={formik.values.endTime}
-                            onChange={(time) => formik.setFieldValue('endTime', time)}
-                        />
-                    </div>
                 </LocalizationProvider>
 
-                {/* Submit Button */}
                 <Button
                     type="submit"
                     variant="contained"

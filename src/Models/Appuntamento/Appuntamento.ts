@@ -14,7 +14,7 @@ export interface Appuntamento {
 export interface CreaAppuntamentoModel {
     id?: string,
 
-    cliente: Cliente,
+    cliente?: Cliente,
 
     titolo?: string,
     sottotitolo: string,
