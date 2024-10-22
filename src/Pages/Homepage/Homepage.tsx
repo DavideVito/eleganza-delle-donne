@@ -1,12 +1,13 @@
 import { Scheduler } from "@aldabil/react-scheduler"
 import AppuntamentiRepository from "../../Repositories/Appuntamenti/AppuntamentiRepository"
-import { useContext } from "react"
+import { useContext, useEffect, useRef } from "react"
 import { Appuntamento } from "../../Models/Appuntamento/Appuntamento"
-import { ProcessedEvent } from "@aldabil/react-scheduler/types"
+import { ProcessedEvent, SchedulerRef } from "@aldabil/react-scheduler/types"
 import { it } from 'date-fns/locale';
 import CreaAppuntamento from "../Crea/Appuntamento"
 import { AppuntamentiContext } from "../../Contexts/Appuntamenti/AppuntamentiContext"
 import { Loading } from "../../Components/Loading/Loading"
+import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns"
 
 
 const convertEventi = (appuntamento: Appuntamento): ProcessedEvent => {
@@ -56,6 +57,8 @@ const traduzioni = {
 
 export const Homepage = () => {
 
+    const ref = useRef<SchedulerRef>(null);
+
     const [appuntamenti, aggiornaAppuntamenti] = useContext(AppuntamentiContext)
 
     const onDelete = async (event: string) => {
@@ -63,10 +66,36 @@ export const Homepage = () => {
         aggiornaAppuntamenti()
     }
 
+    useEffect(() => {
+        aggiornaAppuntamenti(startOfWeek(new Date()), endOfWeek(new Date()))
+    }, [])
+
+    const onSelectedDateChange = (date: Date) => {
+        let start, end: Date;
+        const view = ref.current?.scheduler.view
+
+        if (view === "week") {
+            start = startOfWeek(date);
+            end = endOfWeek(date);
+        } else if (view === "month") {
+            start = startOfMonth(date);
+            end = endOfMonth(date);
+        } else {
+            start = date;
+            end = date;
+        }
+
+        aggiornaAppuntamenti(start, end)
+    }
+
 
     if (!appuntamenti) return
 
     return <Scheduler
+
+        ref={ref}
+
+        onSelectedDateChange={onSelectedDateChange}
 
         locale={it}
 

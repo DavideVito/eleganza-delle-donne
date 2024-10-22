@@ -27,7 +27,6 @@ export const ListaClienti = () => {
     const clienti = useContext(ClienteContext)
 
     const [groupedUser, setGroupedUser] = useState({})
-
     const [clientiFiltrati, setClientiFiltrati] = useState<Cliente[]>([])
 
     useEffect(() => {
@@ -41,6 +40,8 @@ export const ListaClienti = () => {
     }, [clienti])
 
     useEffect(() => {
+
+
         if (!clientiFiltrati) {
             setGroupedUser({})
             return

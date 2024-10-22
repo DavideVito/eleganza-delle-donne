@@ -11,8 +11,10 @@ export const CercaClienti = ({ clienti, setClientiFiltrati }: CercaClientiProps)
 
     const [testo, setTesto] = useState<string>("");
     useEffect(() => {
+        const t = testo.toLocaleLowerCase()
+
         if (!clienti) return;
-        const c = clienti.filter(x => x.nomePersona.toLocaleLowerCase().includes(testo))
+        const c = clienti.filter(x => x.nomePersona.toLowerCase().includes(t))
 
         setClientiFiltrati(c)
 

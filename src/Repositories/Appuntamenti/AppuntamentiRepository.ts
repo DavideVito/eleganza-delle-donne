@@ -1,4 +1,4 @@
-import { FirestoreDataConverter, addDoc, collection, deleteDoc, doc, getDocs, getFirestore, query, setDoc } from "firebase/firestore"
+import { FirestoreDataConverter, addDoc, collection, deleteDoc, doc, getDocs, getFirestore, query, setDoc, where } from "firebase/firestore"
 import { app } from "../../Firebase/Firebase";
 import { Appuntamento, CreaAppuntamentoModel } from "../../Models/Appuntamento/Appuntamento";
 
@@ -52,9 +52,13 @@ const AggiornaAppuntamento = async (id: string, payload: CreaAppuntamentoModel):
 
 }
 
-const GetAppuntamenti = async (): Promise<Appuntamento[]> => {
-    const q = query(collezioneAppuntamenti);
+const GetAppuntamenti = async (inizio?: Date, fine?: Date): Promise<Appuntamento[]> => {
+    let predicates = []
 
+    if (inizio) predicates.push(where("inizio", ">=", inizio))
+    if (fine) predicates.push(where("inizio", "<=", fine))
+
+    const q = query(collezioneAppuntamenti, ...predicates);
     const ris = await getDocs(q);
 
     return ris.docs.map(x => x.data());
