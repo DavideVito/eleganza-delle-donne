@@ -9,6 +9,12 @@ import { InfoCliente } from './Pages/Info/Clienti/InfoCliente/InfoCliente.tsx'
 import { createTheme, ThemeOptions, ThemeProvider } from '@mui/material'
 import { ClienteContextProvider } from './Contexts/Cliente/ClienteContext.tsx'
 import { AppuntamentiContextProvider } from './Contexts/Appuntamenti/AppuntamentiContext.tsx'
+import { useAuthState } from "react-firebase-hooks/auth"
+import { auth } from './Firebase/Firebase.tsx'
+import { Loading } from './Components/Loading/Loading.tsx'
+import { Login } from './Pages/Auth/Login.tsx'
+
+
 const themeOptions: ThemeOptions = {
   palette: {
     mode: 'light',
@@ -45,19 +51,35 @@ const routes = createBrowserRouter([{
 {
   path: "/cliente/:id",
   element: <InfoCliente />
+},
+])
+
+
+
+const App = () => {
+
+  const [user, loading] = useAuthState(auth)
+
+  if (loading) return <Loading />
+
+  if (!user) return <Login />
+
+  return <>
+    <div style={{ padding: "1rem", marginBottom: "5rem" }}>
+      <RouterProvider router={routes} />
+    </div>
+    <BottomAppBar />
+  </>
+
 }
 
-])
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <ClienteContextProvider>
       <AppuntamentiContextProvider>
         <ThemeProvider theme={theme}>
-          <div style={{ padding: "1rem", marginBottom: "5rem" }}>
-            <RouterProvider router={routes} />
-          </div>
-          <BottomAppBar />
+          <App />
         </ThemeProvider>
       </AppuntamentiContextProvider>
     </ClienteContextProvider>
