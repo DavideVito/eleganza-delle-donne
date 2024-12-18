@@ -109,7 +109,7 @@ export const Homepage = () => {
         loadingComponent={<Loading />}
 
         week={{
-            weekDays: [1, 2, 3, 4, 5, 6],
+            weekDays: [1, 2, 3, 4, 5, 6, 0],
             weekStartOn: 0,
             startHour: 8,
             endHour: 20,

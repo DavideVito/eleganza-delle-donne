@@ -9,10 +9,6 @@ import { InfoCliente } from './Pages/Info/Clienti/InfoCliente/InfoCliente.tsx'
 import { createTheme, ThemeOptions, ThemeProvider } from '@mui/material'
 import { ClienteContextProvider } from './Contexts/Cliente/ClienteContext.tsx'
 import { AppuntamentiContextProvider } from './Contexts/Appuntamenti/AppuntamentiContext.tsx'
-import { useAuthState } from "react-firebase-hooks/auth"
-import { auth } from './Firebase/Firebase.tsx'
-import { Loading } from './Components/Loading/Loading.tsx'
-import { Login } from './Pages/Auth/Login.tsx'
 
 
 const themeOptions: ThemeOptions = {
@@ -57,12 +53,6 @@ const routes = createBrowserRouter([{
 
 
 const App = () => {
-
-  const [user, loading] = useAuthState(auth)
-
-  if (loading) return <Loading />
-
-  if (!user) return <Login />
 
   return <>
     <div style={{ padding: "1rem", marginBottom: "5rem" }}>
