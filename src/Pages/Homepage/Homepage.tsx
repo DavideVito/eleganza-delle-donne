@@ -93,21 +93,11 @@ export const Homepage = () => {
 
     return <Scheduler
 
+        hourFormat="24"
+        timeZone="Europe/Rome"
         ref={ref}
-
-        onSelectedDateChange={onSelectedDateChange}
-
         locale={it}
-
-        translations={traduzioni}
-
         view={"week"}
-
-        onDelete={onDelete}
-
-        loading={typeof appuntamenti === "undefined"}
-        loadingComponent={<Loading />}
-
         week={{
             weekDays: [0, 1, 2, 3, 4, 5, 6],
             weekStartOn: 1,
@@ -118,10 +108,15 @@ export const Homepage = () => {
             disableGoToDay: false
         }}
 
+        onSelectedDateChange={onSelectedDateChange}
+        onDelete={onDelete}
+
+        translations={traduzioni}
+
+        loading={typeof appuntamenti === "undefined"}
+        loadingComponent={<Loading />}
+
         height={400}
-
-
-
         customEditor={(scheduler) => <CreaAppuntamento scheduler={scheduler} />}
 
         events={appuntamenti!.map(convertEventi)}
