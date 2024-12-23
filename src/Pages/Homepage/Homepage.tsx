@@ -89,7 +89,7 @@ export const Homepage = () => {
     }
 
 
-    if (!appuntamenti) return
+    if (!appuntamenti) return <Loading />
 
     return <Scheduler
 
