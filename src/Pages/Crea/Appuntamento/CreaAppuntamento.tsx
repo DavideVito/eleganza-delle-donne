@@ -1,5 +1,5 @@
 import { SchedulerHelpers } from "@aldabil/react-scheduler/types";
-import { TextField, Button, FormControl, Box, InputLabel, MenuItem, Select, Typography, Autocomplete } from "@mui/material";
+import { TextField, Button, FormControl, Box, Typography, Autocomplete } from "@mui/material";
 import { useFormik } from "formik";
 import { useContext, useEffect } from "react";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -116,7 +116,7 @@ export const CreaAppuntamento = ({ scheduler }: CustomEditorProps) => {
 
                         renderInput={(params: any) => <TextField {...params} label="Cliente" />}
 
-                        onChange={(event, newValue) => formik.setFieldValue("client", newValue?.id)}
+                        onChange={(_, newValue) => formik.setFieldValue("client", newValue?.id)}
                     />
 
                     {formik.touched.client && formik.errors.client && (
