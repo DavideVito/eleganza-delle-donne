@@ -7,7 +7,7 @@ import { it } from 'date-fns/locale';
 import CreaAppuntamento from "../Crea/Appuntamento"
 import { AppuntamentiContext } from "../../Contexts/Appuntamenti/AppuntamentiContext"
 import { Loading } from "../../Components/Loading/Loading"
-import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns"
+import { endOfDay, endOfMonth, endOfWeek, startOfDay, startOfMonth, startOfWeek, StartOfWeekOptions } from "date-fns"
 
 
 const convertEventi = (appuntamento: Appuntamento): ProcessedEvent => {
@@ -54,6 +54,7 @@ const traduzioni = {
     loading: "Carico..."
 }
 
+const INTERVAL_OPTIONS: StartOfWeekOptions<Date> = { weekStartsOn: 1 }
 
 export const Homepage = () => {
 
@@ -67,7 +68,7 @@ export const Homepage = () => {
     }
 
     useEffect(() => {
-        aggiornaAppuntamenti(startOfWeek(new Date()), endOfWeek(new Date()))
+        aggiornaAppuntamenti(startOfWeek(new Date(), INTERVAL_OPTIONS), endOfWeek(new Date()))
     }, [])
 
     const onSelectedDateChange = (date: Date) => {
@@ -75,14 +76,14 @@ export const Homepage = () => {
         const view = ref.current?.scheduler.view
 
         if (view === "week") {
-            start = startOfWeek(date);
+            start = startOfWeek(date, INTERVAL_OPTIONS);
             end = endOfWeek(date);
         } else if (view === "month") {
             start = startOfMonth(date);
             end = endOfMonth(date);
         } else {
-            start = date;
-            end = date;
+            start = startOfDay(date);
+            end = endOfDay(date);
         }
 
         aggiornaAppuntamenti(start, end)

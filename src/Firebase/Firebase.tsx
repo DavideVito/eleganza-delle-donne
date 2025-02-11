@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { initializeFirestore } from "firebase/firestore";
+import { initializeFirestore, memoryLocalCache } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -19,7 +19,8 @@ const firebaseConfig = {
 export const app = initializeApp(firebaseConfig);
 
 initializeFirestore(app, {
-    ignoreUndefinedProperties: true
+    ignoreUndefinedProperties: true,
+    localCache: memoryLocalCache()
 });
 
 export const auth = getAuth(app)

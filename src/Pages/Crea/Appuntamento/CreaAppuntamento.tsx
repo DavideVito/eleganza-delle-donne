@@ -1,5 +1,5 @@
 import { SchedulerHelpers } from "@aldabil/react-scheduler/types";
-import { TextField, Button, FormControl, Box, InputLabel, MenuItem, Select, Typography } from "@mui/material";
+import { TextField, Button, FormControl, Box, InputLabel, MenuItem, Select, Typography, Autocomplete } from "@mui/material";
 import { useFormik } from "formik";
 import { useContext, useEffect } from "react";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -51,6 +51,7 @@ export const CreaAppuntamento = ({ scheduler }: CustomEditorProps) => {
     });
 
     const handleSubmit = async (valori: CreaAppuntamentoModel) => {
+        debugger
         if (isEditing) {
             const id = scheduler.state.event_id.value
             await AppuntamentiRepository.AggiornaAppuntamento(id!, valori)
@@ -106,22 +107,18 @@ export const CreaAppuntamento = ({ scheduler }: CustomEditorProps) => {
             <form onSubmit={formik.handleSubmit}>
 
                 <FormControl fullWidth margin="normal" error={formik.touched.client && Boolean(formik.errors.client)}>
-                    <InputLabel id="client-select-label">Cliente</InputLabel>
-                    <Select
-                        labelId="client-select-label"
-                        id="client"
-                        name="client"
-                        value={formik.values.client}
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                        label="Select Client"
-                    >
-                        {clienti.map((client) => (
-                            <MenuItem key={client.id} value={client.id}>
-                                {client.nomePersona}
-                            </MenuItem>
-                        ))}
-                    </Select>
+                    <Autocomplete
+                        style={{ width: "100%" }}
+                        disablePortal
+                        options={clienti.map(x => { return { label: x.nomePersona, id: x.id } })}
+                        sx={{ width: 300 }}
+                        isOptionEqualToValue={(option, value) => option.id === value.id}
+
+                        renderInput={(params: any) => <TextField {...params} label="Cliente" />}
+
+                        onChange={(event, newValue) => formik.setFieldValue("client", newValue?.id)}
+                    />
+
                     {formik.touched.client && formik.errors.client && (
                         <Typography variant="caption" color="error">
                             {formik.errors.client}
