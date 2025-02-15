@@ -5,14 +5,14 @@ import { Appuntamento } from "../../Models/Appuntamento/Appuntamento"
 import { ProcessedEvent, SchedulerRef } from "@aldabil/react-scheduler/types"
 import { it } from 'date-fns/locale';
 import CreaAppuntamento from "../Crea/Appuntamento"
-import { AppuntamentiContext } from "../../Contexts/Appuntamenti/AppuntamentiContext"
+import { AppuntamentiContext, getInterval, INTERVAL_OPTIONS } from "../../Contexts/Appuntamenti/AppuntamentiContext"
 import { Loading } from "../../Components/Loading/Loading"
-import { endOfDay, endOfMonth, endOfWeek, startOfDay, startOfMonth, startOfWeek, StartOfWeekOptions } from "date-fns"
+import { endOfDay, endOfMonth, endOfWeek, startOfDay, startOfMonth, startOfWeek } from "date-fns"
 
 
 const convertEventi = (appuntamento: Appuntamento): ProcessedEvent => {
     return {
-        event_id: appuntamento.id,
+        event_id: `${appuntamento.id}_${appuntamento.inizio.toDateString()}`,
         title: appuntamento.cliente?.nomePersona ?? appuntamento.titolo,
         subtitle: appuntamento.sottotitolo,
         start: appuntamento.inizio,
@@ -54,7 +54,6 @@ const traduzioni = {
     loading: "Carico..."
 }
 
-const INTERVAL_OPTIONS: StartOfWeekOptions<Date> = { weekStartsOn: 1 }
 
 export const Homepage = () => {
 
@@ -63,12 +62,15 @@ export const Homepage = () => {
     const [appuntamenti, aggiornaAppuntamenti] = useContext(AppuntamentiContext)
 
     const onDelete = async (event: string) => {
-        await AppuntamentiRepository.DeleteAppuntamento(event)
-        aggiornaAppuntamenti()
+        const [id, inizio] = event.split("_");
+        const data = new Date(inizio)
+
+        await AppuntamentiRepository.DeleteAppuntamento(id, data)
+        aggiornaAppuntamenti(...getInterval(data))
     }
 
     useEffect(() => {
-        aggiornaAppuntamenti(startOfWeek(new Date(), INTERVAL_OPTIONS), endOfWeek(new Date()))
+        aggiornaAppuntamenti(...getInterval())
     }, [])
 
     const onSelectedDateChange = (date: Date) => {

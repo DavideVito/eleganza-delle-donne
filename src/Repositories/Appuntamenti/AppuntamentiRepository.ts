@@ -35,43 +35,42 @@ const converter: FirestoreDataConverter<Appuntamento> = {
     }
 }
 
-const collezioneAppuntamenti = collection(firestore, "Appuntamenti").withConverter(converter);
+const getCollezioneAppuntamenti = (data: Date) => {
+    const nome = `appuntamenti_${data.getFullYear()}_${data.getMonth()}`
 
+    return collection(firestore, nome).withConverter(converter);
+}
 
 
 const CreaAppuntamento = async (payload: CreaAppuntamentoModel): Promise<string> => {
-    const ris = await addDoc(collezioneAppuntamenti, payload)
+    const ris = await addDoc(getCollezioneAppuntamenti(payload.inizio), payload)
 
     return ris.id;
 }
 
 const AggiornaAppuntamento = async (id: string, payload: CreaAppuntamentoModel): Promise<void> => {
-    const documento = doc(collezioneAppuntamenti, id)
+    const documento = doc(getCollezioneAppuntamenti(payload.inizio), id)
 
     return setDoc(documento, payload)
 
 }
 
-const GetAppuntamenti = async (inizio?: Date, fine?: Date): Promise<Appuntamento[]> => {
+const GetAppuntamenti = async (inizio: Date, fine: Date): Promise<Appuntamento[]> => {
     let predicates = []
 
-    console.table({ inizio, fine })
+    predicates.push(where("inizio", ">=", inizio))
+    predicates.push(where("inizio", "<=", fine))
 
-    if (inizio) predicates.push(where("inizio", ">=", inizio))
-    if (fine) predicates.push(where("inizio", "<=", fine))
-
-    const q = query(collezioneAppuntamenti, ...predicates, orderBy("inizio", "asc"));
+    const q = query(getCollezioneAppuntamenti(inizio), ...predicates, orderBy("inizio", "asc"));
     const ris = await getDocs(q);
 
     return ris.docs.map(x => x.data());
 }
 
-const DeleteAppuntamento = async (id: string): Promise<void> => {
-
-    const documento = doc(collezioneAppuntamenti, id);
+const DeleteAppuntamento = async (id: string, inizio: Date): Promise<void> => {
+    const documento = doc(getCollezioneAppuntamenti(inizio), id);
 
     await deleteDoc(documento);
-
 }
 
 export default {

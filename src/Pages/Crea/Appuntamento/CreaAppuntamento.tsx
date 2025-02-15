@@ -9,7 +9,7 @@ import { ClienteContext } from "../../../Contexts/Cliente/ClienteContext";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import { CreaAppuntamentoModel } from "../../../Models/Appuntamento/Appuntamento";
 import AppuntamentiRepository from "../../../Repositories/Appuntamenti/AppuntamentiRepository";
-import { AppuntamentiContext } from "../../../Contexts/Appuntamenti/AppuntamentiContext";
+import { AppuntamentiContext, getInterval } from "../../../Contexts/Appuntamenti/AppuntamentiContext";
 import dayjs from "dayjs";
 import { Loading } from "../../../Components/Loading/Loading";
 
@@ -51,7 +51,6 @@ export const CreaAppuntamento = ({ scheduler }: CustomEditorProps) => {
     });
 
     const handleSubmit = async (valori: CreaAppuntamentoModel) => {
-        debugger
         if (isEditing) {
             const id = scheduler.state.event_id.value
             await AppuntamentiRepository.AggiornaAppuntamento(id!, valori)
@@ -60,7 +59,7 @@ export const CreaAppuntamento = ({ scheduler }: CustomEditorProps) => {
             await AppuntamentiRepository.CreaAppuntamento(valori)
         }
 
-        aggiornaAppuntamenti()
+        aggiornaAppuntamenti(...getInterval(valori.inizio))
 
         scheduler.close()
     }
