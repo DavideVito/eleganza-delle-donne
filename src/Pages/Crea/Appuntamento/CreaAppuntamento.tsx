@@ -19,6 +19,15 @@ interface CustomEditorProps {
     scheduler: SchedulerHelpers;
 }
 
+const regex = /^[^_]+/;
+
+const extractId = (id: string) => {
+    const m = id.match(regex);
+
+    return m ? m[0] : id;
+}
+
+
 export const CreaAppuntamento = ({ scheduler }: CustomEditorProps) => {
     const clienti = useContext(ClienteContext)
     const [appuntamenti, aggiornaAppuntamenti] = useContext(AppuntamentiContext)
@@ -52,7 +61,7 @@ export const CreaAppuntamento = ({ scheduler }: CustomEditorProps) => {
 
     const handleSubmit = async (valori: CreaAppuntamentoModel) => {
         if (isEditing) {
-            const id = scheduler.state.event_id.value
+            const id = extractId(scheduler.state.event_id.value)
             await AppuntamentiRepository.AggiornaAppuntamento(id!, valori)
 
         } else {
@@ -67,14 +76,13 @@ export const CreaAppuntamento = ({ scheduler }: CustomEditorProps) => {
 
     useEffect(() => {
 
-
-
+        debugger
         if (!isEditing) {
             formik.setFieldValue("date", dayjs(scheduler.state.start.value))
             return
         }
 
-        const id = scheduler.state.event_id.value
+        let id = extractId(scheduler.state.event_id.value)
 
         const appuntameto = appuntamenti?.find(x => x.id === id)!
         if (appuntameto.cliente) {
