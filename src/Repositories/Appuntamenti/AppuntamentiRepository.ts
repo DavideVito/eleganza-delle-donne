@@ -35,8 +35,9 @@ const converter: FirestoreDataConverter<Appuntamento> = {
     }
 }
 
+//@ts-ignore
 const getCollezioneAppuntamenti = (data: Date) => {
-    const nome = `appuntamenti_${data.getFullYear()}_${data.getMonth()}`
+    const nome = `appuntamenti`
 
     return collection(firestore, nome).withConverter(converter);
 }
