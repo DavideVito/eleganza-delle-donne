@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import ReactDOM from 'react-dom/client'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import Homepage from './Pages/Homepage/index.tsx'
@@ -9,6 +9,8 @@ import { InfoCliente } from './Pages/Info/Clienti/InfoCliente/InfoCliente.tsx'
 import { createTheme, ThemeOptions, ThemeProvider } from '@mui/material'
 import { ClienteContextProvider } from './Contexts/Cliente/ClienteContext.tsx'
 import { AppuntamentiContextProvider } from './Contexts/Appuntamenti/AppuntamentiContext.tsx'
+import { Login } from './Pages/Auth/Login.tsx'
+import { UtenteContext, UtenteContextProvider } from './Contexts/Utente/UtenteContext.tsx'
 
 
 const themeOptions: ThemeOptions = {
@@ -31,28 +33,34 @@ const themeOptions: ThemeOptions = {
 
 const theme = createTheme(themeOptions);
 
-const routes = createBrowserRouter([{
-  path: "/",
-  element: <Homepage />
-},
-{
-  path: "/contatti",
-  element: <ListaClienti />
-},
-{
-  path: "/crea/crea-cliente/:id?",
-  element: <CreaCliente />
-}
+const routes = createBrowserRouter([
+
+  {
+    path: "/",
+    element: <Homepage />
+  },
+  {
+    path: "/contatti",
+    element: <ListaClienti />
+  },
+  {
+    path: "/crea/crea-cliente/:id?",
+    element: <CreaCliente />
+  }
   ,
-{
-  path: "/cliente/:id",
-  element: <InfoCliente />
-},
+  {
+    path: "/cliente/:id",
+    element: <InfoCliente />
+  },
 ])
 
 
 
 const App = () => {
+
+  const [isLoggato, _] = useContext(UtenteContext)
+
+  if (!isLoggato) return <Login />
 
   return <>
     <div style={{ padding: "1rem", marginBottom: "5rem" }}>
@@ -66,12 +74,14 @@ const App = () => {
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <ClienteContextProvider>
-      <AppuntamentiContextProvider>
-        <ThemeProvider theme={theme}>
-          <App />
-        </ThemeProvider>
-      </AppuntamentiContextProvider>
-    </ClienteContextProvider>
+    <UtenteContextProvider>
+      <ClienteContextProvider>
+        <AppuntamentiContextProvider>
+          <ThemeProvider theme={theme}>
+            <App />
+          </ThemeProvider>
+        </AppuntamentiContextProvider>
+      </ClienteContextProvider>
+    </UtenteContextProvider>
   </React.StrictMode>,
 )

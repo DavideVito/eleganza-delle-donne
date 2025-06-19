@@ -1,7 +1,21 @@
-import { Box, Button, Typography } from "@mui/material"
-import { accedi } from "../../Utils/Auth"
+import { Box, Button, TextField, Typography } from "@mui/material"
+import { useContext, useRef, useState } from "react"
+import { UtenteContext } from "../../Contexts/Utente/UtenteContext";
 
 export const Login = () => {
+
+    const inputRef = useRef<HTMLInputElement>(null);
+    const [_, setLoggato] = useContext(UtenteContext)
+
+    const accedi = () => {
+
+        const testo = inputRef.current!.value;
+
+        const esito = testo == "10082001";
+
+        if (esito) setLoggato()
+    }
+
     return <Box
         sx={{
             display: 'flex',
@@ -13,6 +27,10 @@ export const Login = () => {
         }}
     >
         <Typography variant="h3">Identificazione</Typography>
+
+
+        <TextField inputRef={inputRef} />
+
         <Button
             onClick={accedi}
             variant="contained"

@@ -76,7 +76,6 @@ export const CreaAppuntamento = ({ scheduler }: CustomEditorProps) => {
 
     useEffect(() => {
 
-        debugger
         if (!isEditing) {
             formik.setFieldValue("date", dayjs(scheduler.state.start.value))
             return
